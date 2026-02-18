@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Technical Delivery Architect</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <!-- =================== Top Bar =================== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <svg class="logo-icon" viewBox="0 0 24 24" width="28" height="28" fill="none">
+        <rect x="1" y="1" width="10" height="10" rx="2" fill="#0078d4"/>
+        <rect x="13" y="1" width="10" height="10" rx="2" fill="#50e6ff"/>
+        <rect x="1" y="13" width="10" height="10" rx="2" fill="#50e6ff"/>
+        <rect x="13" y="13" width="10" height="10" rx="2" fill="#0078d4"/>
+      </svg>
+      <h1>Technical Delivery Architect</h1>
+      <span class="topbar-badge">Work IQ</span>
+    </div>
+    <div class="topbar-center">
+      <div class="model-selector-wrapper">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="opacity:0.6">
+          <path d="M13.5 2.5h-11a1 1 0 00-1 1v9a1 1 0 001 1h11a1 1 0 001-1v-9a1 1 0 00-1-1zM5 5.5h6M5 8h4M5 10.5h5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <select class="model-selector" id="modelSelector" disabled>
+          <option value="">Loading models…</option>
+        </select>
+      </div>
+    </div>
+    <div class="topbar-right" id="topbarRight">
+      <button id="themeToggle" class="theme-toggle" title="Toggle theme">🌓 System</button>
+      <div id="userArea">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </header>
+
+  <!-- =================== Main Layout =================== -->
+  <div class="app-container">
+    <!-- LEFT: Transcript viewer -->
+    <main class="transcript-panel" id="transcriptPanel">
+      <div class="empty-state" id="emptyState">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="38" stroke="#0078d4" stroke-width="2" fill="#f0f6ff"/>
+          <path d="M28 32h24M28 40h20M28 48h16" stroke="#0078d4" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <h2>Select a meeting</h2>
+        <p>Choose a meeting from the sidebar to view its full transcript.</p>
+      </div>
+
+      <div class="transcript-content hidden" id="transcriptContent">
+        <div class="transcript-header" id="transcriptHeader"></div>
+
+        <div class="content-toolbar" id="contentToolbar">
+          <div class="tab-bar">
+            <button class="tab active" data-tab="transcript" id="tabTranscript">📋 Transcript</button>
+            <button class="tab" data-tab="plan" id="tabPlan">🏗️ Plan &amp; Architecture</button>
+          </div>
+          <button class="btn-generate" id="btnGeneratePlan" title="Analyze transcript and generate technical plan">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 2h5v5H2zM9 2h5v5H9zM2 9h5v5H2zM9 9h5v5H9z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Generate Plan &amp; Architecture
+          </button>
+        </div>
+
+        <div class="tab-pane" id="transcriptTab">
+          <div class="transcript-body" id="transcriptBody"></div>
+        </div>
+
+        <div class="tab-pane hidden" id="planTab">
+          <div class="plan-loading hidden" id="planLoading">
+            <div class="spinner"></div>
+            <span id="planLoadingText">Generating plan with AI…</span>
+          </div>
+          <div class="plan-body" id="planBody"></div>
+        </div>
+      </div>
+
+      <div class="loading hidden" id="transcriptLoading">
+        <div class="spinner"></div>
+        <span>Loading transcript…</span>
+      </div>
+    </main>
+
+    <!-- RIGHT: Meeting list sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>Recent Meetings</h2>
+        <button class="btn-refresh" id="btnRefresh" title="Refresh meetings">
+          &#x21bb;
+        </button>
+      </div>
+
+      <div class="meeting-list" id="meetingList">
+        <!-- filled by JS -->
+      </div>
+
+      <div class="loading hidden" id="meetingsLoading">
+        <div class="spinner"></div>
+        <span>Loading meetings…</span>
+      </div>
+    </aside>
+  </div>
+
+  <!-- =================== Login screen =================== -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+      <svg class="login-logo" viewBox="0 0 24 24" width="48" height="48" fill="none">
+        <rect x="1" y="1" width="10" height="10" rx="2" fill="#0078d4"/>
+        <rect x="13" y="1" width="10" height="10" rx="2" fill="#50e6ff"/>
+        <rect x="1" y="13" width="10" height="10" rx="2" fill="#50e6ff"/>
+        <rect x="13" y="13" width="10" height="10" rx="2" fill="#0078d4"/>
+      </svg>
+      <h2>Technical Delivery Architect</h2>
+      <p>Sign in with your Microsoft account to access your meeting transcripts.</p>
+
+      <button class="btn-login" id="btnLogin">
+        <svg width="20" height="20" viewBox="0 0 21 21" fill="none">
+          <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+          <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+          <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+          <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+        </svg>
+        Sign in with Microsoft
+      </button>
+
+      <div class="login-status hidden" id="loginStatus">
+        <div class="spinner"></div>
+        <span id="loginStatusText">Opening browser for sign-in…</span>
+      </div>
+
+      <div class="login-error hidden" id="loginError"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@15/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
